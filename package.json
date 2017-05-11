@@ -1,0 +1,23 @@
+{
+  "name": "pull-splitter",
+  "description": "Split a stream into other streams using filters",
+  "version": "0.0.0",
+  "author": "Jamen Marz (https://git.io/jamen)",
+  "main": "index.js",
+  "repository": "jamen/pull-splitter",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "jamen",
+    "pull-splitter"
+  ],
+  "devDependencies": {
+    "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "pull-pair": "^1.1.0",
+    "pull-pushable": "^2.0.1",
+    "pull-stream": "^3.5.1"
+  }
+}
