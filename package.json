@@ -10,13 +10,13 @@
   },
   "keywords": [
     "jamen",
+    "pull-stream",
     "pull-splitter"
   ],
   "devDependencies": {
     "tape": "^4.6.3"
   },
   "dependencies": {
-    "pull-pair": "^1.1.0",
     "pull-pushable": "^2.0.1",
     "pull-stream": "^3.5.1"
   }

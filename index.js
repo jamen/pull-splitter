@@ -1,5 +1,5 @@
 
-const { pull, filter, drain } = require('pull-stream')
+const { drain } = require('pull-stream')
 const pushable = require('pull-pushable')
 
 module.exports = splitter
@@ -31,7 +31,7 @@ function splitter (filters, onEnd) {
     ended = true
   }
 
-  // Create anm split stream
+  // Create a split stream
   var split = { sink, end }
   for (var name in sources)
     split[name] = sources[name]
