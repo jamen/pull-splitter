@@ -31,7 +31,7 @@ function splitter (config, onEnd) {
       channels[name].end(err)
     }
     rest.end(err)
-    onEnd(err)
+    if (onEnd) onEnd(err)
   }
 
   // Return streams
