@@ -149,9 +149,9 @@ pull-pair@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pull-pair/-/pull-pair-1.1.0.tgz#7ee427263fdf4da825397ac0a05e1ab4b74bd76d"
 
-pull-pushable@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/pull-pushable/-/pull-pushable-2.0.1.tgz#02bdca51a39cf585f483fbecde2fc9378076f212"
+pull-pushable@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/pull-pushable/-/pull-pushable-2.1.0.tgz#aa6c37cde7d54347c49762b4c8b467e814e52fbc"
 
 pull-stream@^3.5.1:
   version "3.5.1"

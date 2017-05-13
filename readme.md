@@ -3,6 +3,8 @@
 
 > Split a stream into other streams using filters
 
+It's like a [`pull-pair/duplex`](https://github.com/pull-stream/pull-pair) except
+
 ```js
 const { pull, drain } = require('pull-stream')
 const { read, write } = require('pull-splitter')
