@@ -5,11 +5,11 @@
 
 ```js
 const { pull, drain } = require('pull-stream')
-const { read, write } = require('pull-splitter')
+const { read, write } = require('pull-files')
 const splitter = require('pull-splitter')
 const { extname } = require('path')
 
-const project = splitter({
+const [split, channels, rest] = splitter({
   js: file => extname(file.path) === '.js',
   css: file => extname(file.path) === '.css',
   html: file => extname(file.path) === '.html',
@@ -20,23 +20,28 @@ const project = splitter({
 // Pull files into splitter:
 pull(
   read('src/**/*'),
-  project.sink
+  split
 )
 
 // Pull results out
 pull(
-  project.css,
+  channels.css,
   write('out/css')
+)
+
+pull(
+  channels.js,
+  write('out/js')
 )
 
 // Pull results with no match
 pull(
-  project.rest,
+  rest,
   write('out/assets')
 )
 ```
 
-The splitter is an object with `{ sink, rest?, ...streams }`, where files go into `sink`, are filtered into `streams`, and the unmatched items stream out of `rest`.
+The splitter returns `[split, channels, rest]`, where `split` is a sink that pushes onto one of the `channels`, or `rest` if none match
 
 See [`pull-merge`](https://github.com/pull-stream/pull-merge) and [`pull-sorted-merge`](https://github.com/pull-stream/pull-sorted-merge) for joining the streams back together
 
@@ -52,33 +57,28 @@ yarn add pull-splitter
 
 ## Usage
 
-### `splitter(channels)`
+### `splitter(config)`
 
-Returns a splitter stream based on the `channels` object provided.
-
-The `channels` is an object of filter functions, such as:
+Returns a sink and sources (`channels` and `rest`), based on the config provided
 
 ```js
-var split = splitter({
-  foo: item => item > 10,
-  bar: item => item > 5,
+var [split, channels, rest] = splitter({
+  high: item => item > 10,
+  low: item => item > 5,
   // ...
-  rest: true
 })
 ```
 
-You can also provide a boolean for one of the properties to capturing any unmatching items.
-
-Each channel turns into a source stream that streams out item based on the condition:
+Each field in config turns into a source stream on `channels` based on the filter
 
 ```js
 pull(
-  split.foo,
+  channels.high,
   drain(console.log)
 )
 
 pull(
-  split.bar,
+  channels.low,
   drain(console.log)
 )
 ```
@@ -88,8 +88,14 @@ Then to stream data in, you use `split.sink`:
 ```js
 pull(
   values([ 3, 6, 9, 12, 15 ]),
-  split.sink
+  split
 )
+```
+
+Pull unmatching items through `rest`:
+
+```
+pull(rest, drain(console.log))
 ```
 
 ## Also see 

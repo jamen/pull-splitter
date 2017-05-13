@@ -4,38 +4,37 @@ const pushable = require('pull-pushable')
 
 module.exports = splitter
 
-function splitter (filters, onEnd) {
+function splitter (config, onEnd) {
   var ended = false
 
   // Create source streams
-  var sources = {}
-  for (var name in filters)
-    sources[name] = pushable()
- 
-  // Sink takes data in, filters, and pushes to a source
-  const sink = drain(data => {
-    for (var name in filters) {
-      if (filters[name] === true || filters[name](data)) {
-        sources[name].push(data)
-        break
-      }
-    }
-  }, end)
-
-  // End all associated streams
-  function end (err) {
-    if (ended) return
-    for (var name in sources)
-      sources[name].end(err)
-    if (onEnd) onEnd(err)
-    ended = true
+  var channels = {}
+  var rest = pushable()
+  for (var name in config) {
+    channels[name] = pushable()
   }
 
-  // Create a split stream
-  var split = { sink, end }
-  for (var name in sources)
-    split[name] = sources[name]
+  // Sink takes data in, filters, and pushes to a source
+  const sink = drain(data => {
+    for (var name in config) {
+      if (config[name](data)) {
+        channels[name].push(data)
+        return
+      }
+    }
+    rest.push(data)
+  }, end)
 
-  return split
+  
+  function end (err) {
+    for (var name in channels) {
+      channels[name].end(err)
+    }
+    rest.end(err)
+    onEnd(err)
+  }
+
+  // Return streams
+  return [sink, channels, rest]
 }
 
